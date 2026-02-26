@@ -1,7 +1,7 @@
 # DOCUMENTAÇÃO DA APLICAÇÃO WEB
 <div alingn="center">
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+![Logo cateclass](/Docs/images/logo-cateclass.png)
 
 <h3 align="center">
 CENTRO PAULA SOUZA - FACULDADE DE TECNOLOGIA DE JAHU
@@ -133,7 +133,7 @@ Um Documento de Requisitos de Sistema é parte essencial no desenvolvimento de s
 ---
 
 ## 5. MODELO DE NEGÓCIO  
-![modelos de Negócio do projeto Cateclass](/docs/modelodenegocios.jpg)
+![modelos de Negócio do projeto Cateclass](/Docs/images/modelodenegocios.jpg)
 
 ---
 
@@ -165,20 +165,20 @@ a visibilidade de mercado do cateclass mostra  que o sistema atende uma necessid
 ---
 
 ## 7. Modelo de Caso de Uso
-![Modelos de casos de uso](/docs/CasosdeUso.png)
+![Modelos de casos de uso](/Docs/images/CasosdeUso.png)
 
 ---
 
 ### 8. Modelo Conceitual 
 
-![modelo conceitual](/docs/modeloconceitual.jpg)
+![modelo conceitual](/Docs/images/modeloconceitual.jpg)
 
 ---
 
 
 ### 9. Modelo Lógico  
 
-![Banco de dados](/docs/bancodados.jpg)
+![Banco de dados](/Docs/images/bancodados.jpg)
 
 ---
 
@@ -210,7 +210,7 @@ a paleta de cores do cateclass foi escolhida para transmitir equilíbrio entre f
 ---
 
 ### 10.3 Logo
-![Logo Cateclass](/docs/logo-cateclass.png)
+![Logo Cateclass](/Docs/images/logo-cateclass.png)
 
 o logotipo do cateclass representa a união entre fé e aprendizado,o livro aberto simboliza o conhecimento e o ensino da catequese,enquanto a cruz no centro expressa a fé cristã que guia o projeto,as cores suaves transmitem acolhimento e serenidade,reforçando a proposta do sistema de ser um ambiente moderno,acessível e voltado á evangelização.
 
@@ -218,7 +218,7 @@ o logotipo do cateclass representa a união entre fé e aprendizado,o livro aber
 
 ### 10.4 Modelo de Navegação
 
-![Modelos de navegação](/docs/modelodenavegacao.png)
+![Modelos de navegação](/Docs/images/modelodenavegacao.png)
 
 o modelo de navegação do cateclass mostra de forma como o usuário percorre as principais funções do sistema,garantindo uma experiência simples e organizada,ele começa com o usuário,que pode acessar diferentes áreas de acordo com sua necessidade, entre essas áreas estão o gerenciamento de usuários,onde é possível fazer login, cadastro e recuperação de senha,o gerenciamento de trumas que permite acompanhar os catequizandos e visualizar o desempenho de cada um,e as atividades, onde é possível entregar tarefas e se comunicar pelo sistemas de mensagens entre os usuarios,esse modelo representa a estrutura de navegação do sistema,destacando a conexão entre as funcionalidades e facilidade de uso para todos os tipos de usuários.
 
@@ -228,17 +228,20 @@ o modelo de navegação do cateclass mostra de forma como o usuário percorre as
 
 a Interface de login principal que permite a autenticação via Email/Senha 
 
-![login catequizandos](/docs/login.catequizando.png)
+![login catequizandos](/Docs/images/login.catequizando.png)
+
 
 ---
 
 Tela utilizada pelo usuário para ingressar em uma turma existente através da inserção de um código de 6 dígitos.
-![tela login](/docs/tela.login.catequizandos.png)
+![tela login](/Docs/images/tela.login.catequizandos.png)
+
 
 ---
 
 Visão geral da plataforma, apresentando o resumo de dados, acesso a turmas e opções rápidas para gerenciamento.
-![dasboard da coordenador(a)](/docs/dash.corde.png)
+![dasboard da coordenador(a)](/Docs/images/dash.corde.png)
+
 
 ---
 
