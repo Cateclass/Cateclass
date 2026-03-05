@@ -16,6 +16,34 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Telefone -->
+        <div class="mt-4">
+            <x-input-label for="telefone" :value="__('Telefone')" />
+            <x-text-input id="telefone" class="block mt-1 w-full" type="text" name="telefone" :value="old('telefone')" required autocomplete="tel" />
+            <x-input-error :messages="$errors->get('telefone')" class="mt-2" />
+        </div>
+
+        <!-- Escolha de usuário -->
+        <div class="mt-4">
+            <x-input-label :value="__('Eu sou um:')" />
+            
+            <div class="flex items-center mt-2 gap-4">
+                <label class="flex items-center">
+                    <input type="radio" name="tipo_usuario" value="catequizando" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('tipo_usuario') == 'catequizando' ? 'checked' : '' }} required>
+                    <span class="ml-2 text-sm text-gray-600">Catequizando</span>
+                </label>
+
+                <label class="flex items-center">
+                    <input type="radio" name="tipo_usuario" value="catequista" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('tipo_usuario') == 'catequista' ? 'checked' : '' }} required>
+                    <span class="ml-2 text-sm text-gray-600">Catequista</span>
+                </label>
+            </div>
+            
+            <x-input-error :messages="$errors->get('tipo_usuario')" class="mt-2" />
+        </div>
+
+
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
