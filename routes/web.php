@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('inicio');
+Route::get('/sobre', function() {
+    return view('sobre');
+})->name('sobre');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
