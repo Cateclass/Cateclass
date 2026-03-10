@@ -49,9 +49,10 @@ class TurmaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        // retorna a view de formulário para criação de turma
+        return view('catequista.criarTurma');
     }
 
     /**
@@ -59,7 +60,18 @@ class TurmaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // valida os dados
+        $validated = $request->validate(
+            [
+                'tipo_turma' => 'required|string|max:20',
+                'dia_horario' => 'required|string',
+                'etapa_id' => 'required|integer|exists',
+                'data_inicio' => 'required|date',
+                'data_termino' => 'nullable|date|after_or_equal:data_inicio'
+            ]
+        );
+
+        
     }
 
     /**
