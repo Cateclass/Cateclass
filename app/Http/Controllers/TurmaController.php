@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+
+
 class TurmaController extends Controller
 {
     /**
@@ -27,7 +29,7 @@ class TurmaController extends Controller
             return view('catequista.turmas', compact('turmas'));
         }
         // catequizando
-        elseif ($usuario->tipo_usuario === 'catequizando') 
+        elseif ($usuario->tipo_usuario === 'catequizando')
         {
             // pega as turmas do catequizando
             $turmas = $usuario->turmasCursadas;
@@ -36,7 +38,7 @@ class TurmaController extends Controller
             return view('catequizando.turmas', compact('turmas'));
         }
         // coordenadora
-        elseif ($usuario->tipo_usuario === 'coordenadora') 
+        elseif ($usuario->tipo_usuario === 'coordenadora')
         {
             // pega todas as turmas do sistema
             $turmas = Turma::all();
@@ -62,16 +64,48 @@ class TurmaController extends Controller
     {
         // valida os dados
         $validated = $request->validate(
+            // regras
             [
                 'tipo_turma' => 'required|string|max:20',
                 'dia_horario' => 'required|string',
                 'etapa_id' => 'required|integer|exists',
                 'data_inicio' => 'required|date',
                 'data_termino' => 'nullable|date|after_or_equal:data_inicio'
+            ],
+            // mensagens
+            [
+                'tipo_turma.required' => 'O tipo da turma é obrigatório!',
+                'tipo_turma.string' => 'O tipo da turma deve ser um texto!',
+                'tipo_turma.max:20' => 'O tipo da turma deve tor no máximo 20 caracteres',
+
+                'dia_horario.required' => 'O dia e horário é obrigatório!',
+                'dia_horario.string' => 'O dia e horário deve ser um texto!',
+
+                'etapa_id.required' => 'A etapa é obrigatória!',
+                'etapa_id.integer' => 'A etapa deve ser um inteiro!',
+                'etapa_id.exists' => 'A etapa deve ser válida!',
+
+                'data_inicio.required' => 'É obrigatório definir a data de início!',
+                'data_inicio.date' => 'A data de início deve ser do tipo data!',
+
+                'data_termino.date' => 'A data de término deve ser do tipo data!',
+                'data_termino.after_or_equal:data_inicio' => 'A data de término deve suceder a data de início!'
             ]
         );
 
-        
+        // define o nome da turma
+        // pega o nome da catequista
+        $nome = $request->user()->name;
+        $nomeCatequista = explode(' ', $nome)[0];
+        // gera o nome
+        $nomeGerado = "{$validated['tipo_turma']} - {$validated['dia_horario']} - {$nomeCatequista}";
+
+        // injeta os dados no array $validated
+        $validated['nome_turma'] = $nomeGerado;
+        $validated['catequista_id'] = auth()->id();
+
+        // salva no banco
+        Turma::create($validated);
     }
 
     /**
