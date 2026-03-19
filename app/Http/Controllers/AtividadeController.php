@@ -57,7 +57,8 @@ class AtividadeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // mostra a view para o catequizando ver a atividade e poder responder
+        return view('verAtividade');
     }
 
     /**
