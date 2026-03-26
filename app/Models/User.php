@@ -4,6 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,33 +55,33 @@ class User extends Authenticatable
     }
 
     // Relacionamentos
-    
+
     //1:1
-    public function catequizando()
+    public function catequizando() : HasOne
     {
         return $this->hasOne(Catequizando::class);
     }
 
     //1:N
-    public function reunioes()
+    public function reunioes() : HasMany
     {
         return $this->hasMany(Reuniao::class, 'organizador_id');
     }
-    public function avisos()
+    public function avisos() : HasMany
     {
         return $this->hasMany(Aviso::class, 'autor_id');
     }
-    public function respostas()
+    public function respostas() : HasMany
     {
         return $this->hasMany(Resposta::class, 'catequizando_id');
     }
-    public function turmasGerenciadas()
+    public function turmasGerenciadas() : HasMany
     {
         return $this->hasMany(Turma::class, 'catequista_id');
     }
 
     //N:N
-    public function turmasCursadas()
+    public function turmasCursadas() : BelongsToMany
     {
         return $this->belongsToMany(Turma::class, 'turma_user')->withPivot('status');
     }
