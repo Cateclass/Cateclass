@@ -25,12 +25,12 @@
 
 <body>
 
-    <header 
+    <header
         class="
             flex items-center justify-between p-[20px] px-[100px] border-b-1 border-black
 
             max-md:flex-col gap-[30px]
-        " 
+        "
         id="inicio"
     >
 
@@ -52,7 +52,7 @@
 
     <section
         class="
-        flex items-center justify-center 
+        flex items-center justify-center
         h-[calc(100vh_-_87px)] bg-cover bg-center relative mb-[200px]"
         style="background-image: url('{{ asset('img/igreja-interna.jpg') }}')"
       >
@@ -64,14 +64,14 @@
 
             <h1 class="text-[32px] text-center font-bold mb-[50px]">Sobre a Paróquia</h1>
 
-            <div 
+            <div
                 class="
                     flex justify-center gap-[100px] mb-[200px]
 
                     max-lg:flex-col max-lg:items-center
                 "
             >
-                <div 
+                <div
                     class="
                         w-[500px]
 
@@ -93,10 +93,10 @@
 
                 <h2 class="text-[32px] text-center font-bold mb-[50px]">Sobre o Pároco</h2>
 
-                <div 
+                <div
                     class="
                         flex justify-center items-center gap-[100px]
-                        
+
                         max-lg:flex-col
                         "
                 >
@@ -105,10 +105,10 @@
                         <img class="w-[600px] rounded-[20px]" src="{{ asset('img/pe_jose_reinaldo_vieira.jpg') }}" alt="">
                     </div>
 
-                    <div 
+                    <div
                         class="
                             w-[500px]
-                            
+
                             max-md:w-[300px]"
                     >
                         <p class="text-[18px] text-justify mb-[20px]">O Pe. José Reinaldo Vieira nasceu em 2 de agosto de 1974 e foi ordenado sacerdote em 22 de novembro de 2013, pela Diocese de Jaú. Desde então, vem exercendo seu ministério com grande zelo, simplicidade e amor à Igreja, servindo ao povo de Deus em diversas comunidades da diocese.</p>
@@ -124,12 +124,12 @@
         </section>
 
         <!-- Catequese e Crisma -->
-        <section 
+        <section
             class="flex flex-col items-center px-[100px] mb-[100px]" id="catequese">
 
             <h2 class="text-center text-[32px] font-bold mb-[50px]">Eucaristia e Crisma</h2>
 
-            <a class="bg-[#00ff00] px-[20px] py-[7px] rounded-[30px]" href="/cateclass-site/app/login">Log In</a>
+            <a class="bg-[#00ff00] px-[20px] py-[7px] rounded-[30px]" href="{{ route('login') }}">Log In</a>
 
         </section>
 
@@ -137,7 +137,7 @@
 
     <footer class="text-[#fff]">
 
-        <div 
+        <div
             class="
                 bg-[#33383C] py-[100px] px-[120px] relative bottom-0 flex justify-between
                 items-center
@@ -172,7 +172,7 @@
                 <p class="uppercase font-bold mb-[20px]">Páginas</p>
                 <ul class="flex flex-col gap-[10px]">
                     <li><a class="uppercase" href="#inicio">Início</a></li>
-                    <li><a class="uppercase" href="#sobre">Paróquia</a></li>                    
+                    <li><a class="uppercase" href="#sobre">Paróquia</a></li>
                     <li><a class="uppercase" href="#catequese">Catequese</a></li>
                     <li><a class="uppercase" href="{{ route('sobre') }}">Sobre Nós</a></li>
                 </ul>

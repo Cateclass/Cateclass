@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Etapa;
 use App\Models\Turma;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class TurmaController extends Controller
             $turmas = $usuario->turmasGerenciadas;
 
             // retorna a view passando as turmas
-            return view('catequista.turmas', compact('turmas'));
+            return view('catequista.verTurmas', compact('turmas'));
         }
 
         // catequizando
@@ -59,8 +60,10 @@ class TurmaController extends Controller
      */
     public function create(): View
     {
+        // pega as etapas para passar para a view
+        $etapas = Etapa::all();
         // retorna a view de formulário para criação de turma
-        return view('catequista.criarTurma');
+        return view('catequista.criarTurma', compact('etapas'));
     }
 
     /**
@@ -82,7 +85,7 @@ class TurmaController extends Controller
             [
                 'tipo_turma.required' => 'O tipo da turma é obrigatório!',
                 'tipo_turma.string' => 'O tipo da turma deve ser um texto!',
-                'tipo_turma.max:20' => 'O tipo da turma deve tor no máximo 20 caracteres',
+                'tipo_turma.max' => 'O tipo da turma deve tor no máximo 20 caracteres',
 
                 'dia_horario.required' => 'O dia e horário é obrigatório!',
                 'dia_horario.string' => 'O dia e horário deve ser um texto!',
@@ -120,9 +123,23 @@ class TurmaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Turma $turma): View
     {
-        //
+        // verifica se a turma pertence ao catequista
+        if ($turma->catequista_id !== auth()->id()) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        // carrega a etapa da turma
+        $turma->load('etapa');
+
+        // busca as atividades da turma
+        $atividades = $turma->atividades()->latest()->get();
+
+        // busca os catequizandos da turma
+        $catequizandos = $turma->alunos()->get();
+
+        return view('catequista.verTurma', compact('turma', 'atividades', 'catequizandos'));
     }
 
     /**
@@ -130,8 +147,16 @@ class TurmaController extends Controller
      */
     public function edit(Turma $turma)
     {
+        // permite apenas o catequista da turma
+        if ($turma->catequista_id !== auth()->id()) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        // pegas as etapas
+        $etapas = Etapa::all();
+
         // retorna a view com a turma encontrada pelo parâmetro da rota
-        return view('catequista.editarTurma', ['turma' => $turma]);
+        return view('catequista.editarTurma', compact('turma', 'etapas'));
     }
 
     /**
@@ -139,6 +164,11 @@ class TurmaController extends Controller
      */
     public function update(Request $request, Turma $turma)
     {
+        // permite apenas o catequista da turma
+        if ($turma->catequista_id !== auth()->id()) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
         // valida os dados
         $validated = $request->validate(
         // regras
@@ -170,11 +200,20 @@ class TurmaController extends Controller
             ]
         );
 
+        // recalcula o nome da turma
+        $nome = $request->user()->name;
+        $nomeCatequista = explode(' ', $nome)[0];
+        // gera o nome
+        $nomeGerado = "{$validated['tipo_turma']} - {$validated['dia_horario']} - $nomeCatequista";
+
+        // injeta os dados no array $validated
+        $validated['nome_turma'] = $nomeGerado;
+
         // atualiza os dados
         $turma->update($validated);
 
         // retorna para o index de turmas
-        return redirect()->route('catequista.turmas');
+        return redirect()->route('catequista.turmas')->with('sucesso', 'Turma atualizada com sucesso!');
     }
 
     /**

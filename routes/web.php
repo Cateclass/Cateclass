@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\AtividadeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TurmaController;
 use Illuminate\Support\Facades\Route;
 
+// rotas de inicio
 Route::get('/', function () {
     return view('welcome');
 })->name('inicio');
@@ -10,9 +14,18 @@ Route::get('/sobre', function() {
     return view('sobre');
 })->name('sobre');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// rotas do catequista
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/turmas', [TurmaController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.turmas');
+Route::get('/atividades', [AtividadeController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.atividades');
+Route::get('/criarTurma', [TurmaController::class, 'create'])->middleware(['auth', 'verified'])->name('catequista.criarTurma');
+Route::post('/criarTurmaSubmit', [TurmaController::class, 'store'])->middleware(['auth', 'verified'])->name('catequista.criarTurmaSubmit');
+Route::get('/verTurma/{turma}', [TurmaController::class, 'show'])->middleware(['auth', 'verified'])->name('catequista.verTurma');
+Route::get('/catequista/turma/{turma}/editar', [TurmaController::class, 'edit'])->middleware(['auth', 'verified'])->name('catequista.editarTurma');
+Route::put('/editarTurma/{turma}', [TurmaController::class, 'update'])->middleware(['auth', 'verified'])->name('catequista.editarTurmaSubmit');
+Route::delete('deletarTurma/{turma}', [TurmaController::class, 'destroy'])->middleware(['auth', 'verified'])->name('catequista.deleteTurma');
+Route::get('criarAtividade', [AtividadeController::class, 'create'])->middleware(['auth', 'verified'])->name('catequista.criarAtividade');
+Route::post('criarAtividadeSubmit', [AtividadeController::class, 'store'])->middleware(['auth', 'verified'])->name('catequista.criarAtividadeSubmit');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

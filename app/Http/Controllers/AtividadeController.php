@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Atividade;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -25,7 +26,7 @@ class AtividadeController extends Controller
         })->latest()->get();
 
         // retorna a view com as atividades
-        return view('atividade.index', compact('atividades'));
+        return view('catequista.atividades', compact('atividades'));
     }
 
     /**
@@ -33,8 +34,11 @@ class AtividadeController extends Controller
      */
     public function create(): View
     {
+        // retorna as turmas do catequista para poder escolher qual será a turma
+        $turmas = auth()->user()->turmasGerenciadas()->orderBy('nome_turma')->get();
+
         // mostra o formulário para o catequista criar uma atividade
-        return view('catequista.criarAtividade');
+        return view('catequista.criarAtividade', compact('turmas'));
     }
 
     /**
