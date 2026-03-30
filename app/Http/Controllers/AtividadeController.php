@@ -15,18 +15,76 @@ class AtividadeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // pega o id do catequista
-        $catequistaId = auth()->id();
+        $usuario = auth()->user();
 
-        // busca as atividades que pertencem as turmas desse catequista
-        $atividades = Atividade::whereHas('turma', function ($query) use ($catequistaId) {
-            $query->where('catequista_id', $catequistaId);
-        })->latest()->get();
+        // se for catequista
+        if ($usuario->tipo_usuario === 'catequista') {
+            $atividades = Atividade::whereHas('turma', function ($query) use ($usuario) {
+                $query->where('catequista_id', $usuario->id);
+            })->latest()->get();
 
-        // retorna a view com as atividades
-        return view('catequista.atividades', compact('atividades'));
+            return view('catequista.atividades', compact('atividades'));
+        }
+
+        // se for catequizando
+        if ($usuario->tipo_usuario === 'catequizando') {
+
+            // pega o filtro da URL
+            $filtro = $request->query('filtro', 'todas');
+
+            // busca as atividades das turmas que o aluno está matriculado
+            $todasAtividades = Atividade::whereHas('turma.alunos', function ($query) use ($usuario) {
+                $query->where('user_id', $usuario->id);
+            })
+                ->with(['turma', 'respostas' => function($query) use ($usuario) {
+                    $query->where('user_id', $usuario->id);
+                }])
+                ->latest()
+                ->get();
+
+            // calcula as estatisticas
+            $total = $todasAtividades->count();
+
+            // uma atividade está concluída se a collection de 'respostas' deste catequizando não estiver vazia
+            $concluidas = $todasAtividades->filter(fn($a) => $a->respostas->isNotEmpty())->count();
+
+            // atrasadas: Não tem resposta, tem data_entrega, e a data passou do "agora"
+            $naoEnviadas = $todasAtividades->filter(fn($a) =>
+                $a->respostas->isEmpty() &&
+                $a->data_entrega &&
+                \Carbon\Carbon::parse($a->data_entrega)->isPast()
+            )->count();
+
+            // pendentes
+            $pendentes = $total - $concluidas;
+
+            $stats = compact('total', 'pendentes', 'naoEnviadas', 'concluidas');
+
+            // aplicando o Filtro para a lista que vai renderizar na tela
+            $lista_atividades = $todasAtividades;
+
+            if ($filtro === 'pendentes') {
+                $lista_atividades = $todasAtividades->filter(fn($a) =>
+                    $a->respostas->isEmpty() &&
+                    (!$a->data_entrega || \Carbon\Carbon::parse($a->data_entrega)->isFuture())
+                );
+            } elseif ($filtro === 'atrasadas') {
+                $lista_atividades = $todasAtividades->filter(fn($a) =>
+                    $a->respostas->isEmpty() &&
+                    $a->data_entrega &&
+                    \Carbon\Carbon::parse($a->data_entrega)->isPast()
+                );
+            } elseif ($filtro === 'concluidas') {
+                $lista_atividades = $todasAtividades->filter(fn($a) => $a->respostas->isNotEmpty());
+            }
+
+            return view('catequizando.atividades', compact('lista_atividades', 'stats', 'filtro'));
+        }
+
+        abort(403, 'Acesso não autorizado.');
     }
 
     /**
@@ -59,10 +117,18 @@ class AtividadeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Atividade $atividade)
     {
-        // mostra a view para o catequizando ver a atividade e poder responder
-        return view('verAtividade');
+        $usuario = auth()->user();
+
+        // carrega os dados da atividade
+        $atividade->load('turma.etapa');
+
+        // busca se o usuário enviou alguma resposta ou não, se não enviou retorna null
+        $resposta = $atividade->respostas()->where('user_id', $usuario->id)->first();
+
+        // retorna a view de ver atividade
+        return view('catequizando.verAtividade', compact('atividade', 'resposta'));
     }
 
     /**

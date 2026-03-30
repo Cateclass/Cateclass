@@ -4,7 +4,7 @@
                          transition-transform duration-300 ease-in-out shadow-lg lg:shadow-none">
 
     <div class="relative flex items-center gap-3 p-4 mb-4 border-b">
-        <img class="w-20 rounded-full" src="{{ asset('assets/img/logotipo.jpg') }}" alt="Logotipo CateClass">
+        <img class="w-20 rounded-full" src="{{ asset('img/logotipo.jpg') }}" alt="Logotipo CateClass">
         <div>
             <p class="font-bold">CateClass</p>
             <span class="text-sm text-[#4A9FFF]">Plataforma Educacional</span>
@@ -17,13 +17,13 @@
     <nav class="flex-1">
         <ul class="list-none p-0">
             <li>
-                <a class="flex items-center gap-3 p-3 pl-6 hover:bg-gray-100 rounded-lg mx-2" href="{{ url('/catequizando') }}">
+                <a class="flex items-center gap-3 p-3 pl-6 hover:bg-gray-100 rounded-lg mx-2" href="{{ route('dashboard') }}">
                     <i class="material-icons">home</i>
                     Dashboard
                 </a>
             </li>
             <li>
-                <a class="flex items-center gap-3 p-3 pl-6 hover:bg-gray-100 rounded-lg mx-2" href="{{ url('/catequizando/atividades') }}">
+                <a class="flex items-center gap-3 p-3 pl-6 hover:bg-gray-100 rounded-lg mx-2" href="{{ route('catequizando.atividades') }}">
                     <i class="material-icons">checklist</i>
                     Atividades
                 </a>
@@ -36,7 +36,7 @@
             <p class="pl-2 uppercase text-sm font-semibold text-gray-600 mb-3">Ações rápidas</p>
 
             <div class="flex flex-col items-center gap-3">
-                <a class="flex justify-center items-center gap-2 bg-[#008000] text-white w-full py-2 rounded-lg" href="{{ url('/catequizando/entrar-turma') }}">
+                <a class="flex justify-center items-center gap-2 bg-[#008000] text-white w-full py-2 rounded-lg" href="{{ route('catequizando.entrarTurma') }}">
                     <i class="material-icons">login</i>
                     Entrar na turma
                 </a>
@@ -53,13 +53,13 @@
         </div>
 
         <div class="flex justify-center">
-            <a class="flex items-center gap-3 bg-[#BEDDF5] w-full p-2 rounded-lg" href="{{ url('/catequizando/perfil') }}">
+            <a class="flex items-center gap-3 bg-[#BEDDF5] w-full p-2 rounded-lg" href="{{ route('profile.edit') }}">
                 <div class="flex justify-center items-center w-10 h-10 rounded-full bg-[#4A9FFF] text-white font-bold">
-                    {{ strtoupper(substr(auth()->user()->nome ?? 'U', 0, 1)) }}
+                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                 </div>
                 <div class="flex flex-col items-start">
                     <span class="text-black font-semibold">
-                        {{ auth()->user()->nome ?? 'Usuário' }}
+                        {{ auth()->user()->name ?? 'Usuário' }}
                     </span>
                     <span class="text-sm text-[#4A9FFF]">
                         {{ ucfirst(auth()->user()->tipo_usuario ?? 'Catequizando') }}

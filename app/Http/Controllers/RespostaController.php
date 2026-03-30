@@ -31,29 +31,28 @@ class RespostaController extends Controller
      */
     public function store(Request $request)
     {
-        // pega o id do catequizando
-        $catequizandoId = Auth::user()->id;
+        // pega o usuario logado
+        $usuario = Auth::user();
 
-        // valida o dado
-        $validated = $request->validate(
-            // regras
-            [
-                'texto' => 'required|string|max:255'
-            ],
-            // mensagens
-            [
-                'texto.required' => 'A resposta é obrigatória!',
-                'texto.string' => 'A resposta deve ser um texto!',
-                'texto.max' => 'A resposta deve ter no máximo 255 caracteres!'
-            ]
-        );
+        // valida os dados
+        $request->validate([
+            'atividade_id' => 'required|exists:atividades,id',
+            'tipo_entrega' => 'required|in:texto,confirmacao',
+            'texto_resposta' => 'required_if:tipo_entrega,texto|string|nullable|max:255'
+        ], [
+            'texto_resposta.required_if' => 'A resposta é obrigatória para este tipo de atividade!',
+            'texto_resposta.max' => 'A resposta deve ter no máximo 255 caracteres!'
+        ]);
 
-        // guarda no banco
-        Resposta::create($validated);
+        // insere a resposta no banco
+        Resposta::create([
+            'atividade_id' => $request->atividade_id,
+            'user_id' => $usuario->id,
+            'texto' => $request->texto_resposta,
+        ]);
 
-        // retorna para a view de atividade
-        return redirect()->route('atividade.show', $catequizandoId);
-
+        // retorna para as atividades do catequizando
+        return redirect()->route('catequizando.atividades')->with('sucesso', 'Atividade entregue com sucesso!');
     }
 
     /**
@@ -102,8 +101,21 @@ class RespostaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        // pega o usuario logado
+        $usuario = Auth::user();
+
+        // busca a resposta pelo id
+        $resposta = Resposta::find($request->resposta_id);
+
+        // verifica se a resposta existe e se foi enviada por esse aluno e retorna para a tela anterior com sucesso
+        if ($resposta && $resposta->user_id === $usuario->id) {
+            $resposta->delete();
+            return back()->with('sucesso', 'Envio cancelado. Você pode enviar novamente.');
+        }
+
+        // retorna para a tela anterior com erro caso não passar na validação
+        return back()->with('erro', 'Não foi possível cancelar este envio.');
     }
 }

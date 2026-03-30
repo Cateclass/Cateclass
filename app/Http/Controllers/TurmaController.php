@@ -227,4 +227,39 @@ class TurmaController extends Controller
         // retorna para o index de turmas
         return redirect()->route('catequista.turmas')->with('success', 'Turma apagada com sucesso!');
     }
+
+    // métodos para o catequizando entrar na turma
+
+    // mostra o formulário para o catequizando colocar o código da turma
+    public function entrarTurma() : View
+    {
+        return view('catequizando.entrarTurma');
+    }
+
+    // processa o código e coloca o catequizando na turma
+    public function matricular(Request $request) : RedirectResponse
+    {
+        // valida os dados
+        $request->validate([
+            'codigo_turma' => 'required|string|exists:turmas,codigo_turma'
+        ], [
+            'codigo_turma.required' => 'Por favor, informe o código da turma.',
+            'codigo_turma.exists' => 'Código inválido ou turma não encontrada.'
+        ]);
+
+        // busca a turma usando o código validado
+        $turma = Turma::where('codigo_turma', $request->codigo_turma)->first();
+        $user = auth()->user();
+
+        // verifica se o catequizando já não está na turma
+        if ($turma->alunos()->where('user_id', $user->id)->exists()) {
+            return back()->with('erro', 'Você já está matriculado nesta turma!');
+        }
+
+        // insere o catequizando na turma
+        $turma->alunos()->attach($user->id);
+
+        // redireciona para a dashboard
+        return redirect()->route('dashboard')->with('sucesso', 'Matriculado com sucesso! Bem vindo(a) a turma!');
+    }
 }

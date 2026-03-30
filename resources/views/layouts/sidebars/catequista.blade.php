@@ -5,7 +5,7 @@
                          -translate-x-full lg:translate-x-0">
 
     <div class="relative flex items-center gap-3 p-4 mb-4 border-b">
-        <img class="w-20 h-20 rounded-full" src="{{ asset('assets/img/logotipo.jpg') }}" alt="Logotipo CateClass">
+        <img class="w-20 h-20 rounded-full" src="{{ asset('img/logotipo.jpg') }}" alt="Logotipo CateClass">
         <div>
             <p class="font-bold">CateClass</p>
             <span class="text-sm text-[#4A9FFF]">Plataforma Educacional</span>
