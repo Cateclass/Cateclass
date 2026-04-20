@@ -133,15 +133,15 @@
 
                         <div class="mt-4 sm:mt-0">
                             @if ($estaConcluida)
-                                <a href="{{ url('/catequizando/atividade/'.$atividade->id) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors">
+                                <a href="{{ route("catequizando.verAtividade", $atividade) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors">
                                     Ver Resposta
                                 </a>
                             @elseif ($estaAtrasada)
-                                <a href="{{ url('/catequizando/atividade/'.$atividade->id) }}" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors">
+                                <a href="{{ route("catequizando.verAtividade", $atividade) }}" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors">
                                     Ver (Atrasada)
                                 </a>
                             @else
-                                <a href="{{ url('/catequizando/atividade/'.$atividade->id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors">
+                                <a href="{{ route("catequizando.verAtividade", $atividade) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors">
                                     Ver Atividade
                                 </a>
                             @endif

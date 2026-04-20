@@ -67,7 +67,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold text-gray-800">Sua Resposta</h2>
 
-                    <form action="{{ route('catequizando.cancelarResposta') }}" method="POST" onsubmit="return confirm('Tem certeza que deseja cancelar o envio? Sua resposta será apagada e você precisará enviar novamente.');">
+                    <form action="{{ route('catequizando.cancelar') }}" method="POST" onsubmit="return confirm('Tem certeza que deseja cancelar o envio? Sua resposta será apagada e você precisará enviar novamente.');">
                         @csrf
                         @method('DELETE')
                         <input type="hidden" name="resposta_id" value="{{ $resposta->id }}">
@@ -106,7 +106,7 @@
         @else
             @if ($atividade->tipo_entrega == 'texto')
 
-                <form action="{{ route('catequizando.responderAtividade') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md mt-6">
+                <form action="{{ route('catequizando.responder') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md mt-6">
                     @csrf
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Enviar Resposta</h2>
 
@@ -134,7 +134,7 @@
 
             @else
 
-                <form action="{{ route('catequizando.responderAtividade') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md mt-6">
+                <form action="{{ route('catequizando.responder') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md mt-6">
                     @csrf
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Confirmar Conclusão</h2>
 

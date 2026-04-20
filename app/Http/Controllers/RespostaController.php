@@ -47,8 +47,9 @@ class RespostaController extends Controller
         // insere a resposta no banco
         Resposta::create([
             'atividade_id' => $request->atividade_id,
-            'user_id' => $usuario->id,
+            'catequizando_id' => $usuario->id,
             'texto' => $request->texto_resposta,
+            'data_envio' => now(),
         ]);
 
         // retorna para as atividades do catequizando
@@ -109,8 +110,8 @@ class RespostaController extends Controller
         // busca a resposta pelo id
         $resposta = Resposta::find($request->resposta_id);
 
-        // verifica se a resposta existe e se foi enviada por esse aluno e retorna para a tela anterior com sucesso
-        if ($resposta && $resposta->user_id === $usuario->id) {
+        // verifica se a resposta existe e se foi enviada por esse catequizando e retorna para a tela anterior com sucesso
+        if ($resposta && $resposta->catequizando_id === $usuario->id) {
             $resposta->delete();
             return back()->with('sucesso', 'Envio cancelado. Você pode enviar novamente.');
         }

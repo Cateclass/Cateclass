@@ -20,13 +20,13 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 
 // rotas do catequista
 Route::get('/turmas', [TurmaController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.turmas');
-Route::get('/atividades', [AtividadeController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.atividades');
+Route::get('/catequista/atividades', [AtividadeController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.atividades');
 Route::get('/criarTurma', [TurmaController::class, 'create'])->middleware(['auth', 'verified'])->name('catequista.criarTurma');
 Route::post('/criarTurmaSubmit', [TurmaController::class, 'store'])->middleware(['auth', 'verified'])->name('catequista.criarTurmaSubmit');
 Route::get('/verTurma/{turma}', [TurmaController::class, 'show'])->middleware(['auth', 'verified'])->name('catequista.verTurma');
 Route::get('/catequista/turma/{turma}/editar', [TurmaController::class, 'edit'])->middleware(['auth', 'verified'])->name('catequista.editarTurma');
 Route::put('/editarTurma/{turma}', [TurmaController::class, 'update'])->middleware(['auth', 'verified'])->name('catequista.editarTurmaSubmit');
-Route::delete('deletarTurma/{turma}', [TurmaController::class, 'destroy'])->middleware(['auth', 'verified'])->name('catequista.deleteTurma');
+Route::delete('/deletarTurma/{turma}', [TurmaController::class, 'destroy'])->middleware(['auth', 'verified'])->name('catequista.deleteTurma');
 Route::get('/criarAtividade', [AtividadeController::class, 'create'])->middleware(['auth', 'verified'])->name('catequista.criarAtividade');
 Route::post('/criarAtividadeSubmit', [AtividadeController::class, 'store'])->middleware(['auth', 'verified'])->name('catequista.criarAtividadeSubmit');
 

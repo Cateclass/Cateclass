@@ -40,7 +40,7 @@ class AtividadeController extends Controller
                 $query->where('user_id', $usuario->id);
             })
                 ->with(['turma', 'respostas' => function($query) use ($usuario) {
-                    $query->where('user_id', $usuario->id);
+                    $query->where('catequizando_id', $usuario->id);
                 }])
                 ->latest()
                 ->get();
@@ -125,7 +125,7 @@ class AtividadeController extends Controller
         $atividade->load('turma.etapa');
 
         // busca se o usuário enviou alguma resposta ou não, se não enviou retorna null
-        $resposta = $atividade->respostas()->where('user_id', $usuario->id)->first();
+        $resposta = $atividade->respostas()->where('catequizando_id', $usuario->id)->first();
 
         // retorna a view de ver atividade
         return view('catequizando.verAtividade', compact('atividade', 'resposta'));

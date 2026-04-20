@@ -72,7 +72,7 @@
                     <div class="bg-white rounded-lg shadow-md overflow-hidden relative">
                         <div class="h-10 {{ $cor }}"></div>
 
-                        <a href="{{ url('/catequista/turma/'.$turma->id_turma.'/editar') }}" class="absolute top-12 right-4 text-gray-400 hover:text-gray-600">
+                        <a href="{{ route('catequista.editarTurma', $turma) }}" class="absolute top-12 right-4 text-gray-400 hover:text-gray-600">
                             <i class="material-icons-outlined">more_vert</i>
                         </a>
 
@@ -87,7 +87,8 @@
                                 <span class="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-1 rounded">
                                     {{ $turma->codigo_turma }}
                                 </span>
-                                <a href="{{ url('/catequista/turma?id='.$turma->id_turma) }}" class="text-sm font-semibold text-blue-600 hover:underline">
+
+                                <a href="{{ route('catequista.verTurma', $turma) }}" class="text-sm font-semibold text-blue-600 hover:underline">
                                     Gerenciar
                                 </a>
                             </div>

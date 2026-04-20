@@ -53,7 +53,7 @@ class DashboardController extends Controller
         elseif ($user->tipo_usuario === 'catequizando')
         {
             // pega as turmas do catequizando
-            $turmas = $user->turmasGerenciadas()->with('etapa')->get();
+            $turmas = $user->turmasCursadas()->with('etapa')->get();
 
             // pega o total de turmas
             $totalTurmas = $turmas->count();
