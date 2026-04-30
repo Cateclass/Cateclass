@@ -29,6 +29,11 @@ Route::put('/editarTurma/{turma}', [TurmaController::class, 'update'])->middlewa
 Route::delete('/deletarTurma/{turma}', [TurmaController::class, 'destroy'])->middleware(['auth', 'verified'])->name('catequista.deleteTurma');
 Route::get('/criarAtividade', [AtividadeController::class, 'create'])->middleware(['auth', 'verified'])->name('catequista.criarAtividade');
 Route::post('/criarAtividadeSubmit', [AtividadeController::class, 'store'])->middleware(['auth', 'verified'])->name('catequista.criarAtividadeSubmit');
+Route::get('/atividade/{atividade}/editar', [AtividadeController::class, 'edit'])->middleware(['auth', 'verified'])->name('catequista.editarAtividade');
+Route::put('/atividade/{atividade}', [AtividadeController::class, 'update'])->middleware(['auth', 'verified'])->name('catequista.atividadeUpdate');
+Route::get('/atividade/{atividade}/entregas', [RespostaController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.verEntregas');
+Route::get('/resposta/{resposta}/corrigir', [RespostaController::class, 'edit'])->middleware(['auth', 'verified'])->name('catequista.corrigirAtividade');
+Route::put('/resposta/{resposta}/salvar', [RespostaController::class, 'update'])->middleware(['auth', 'verified'])->name('catequista.salvarCorrecao');
 
 // rotas do catequizando
 Route::get('/catequizando/entrarTurma', [TurmaController::class, 'entrarTurma'])->middleware(['auth', 'verified'])->name('catequizando.entrarTurma');

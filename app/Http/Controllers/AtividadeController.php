@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Atividade;
+use App\Models\Turma;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -136,7 +137,9 @@ class AtividadeController extends Controller
      */
     public function edit(Atividade $atividade): View
     {
-        return view('catequista.editarAtividade', compact('atividade'));
+        $turmas = Turma::where('catequista_id', auth()->id())->get();
+
+        return view('catequista.editarAtividade', compact('atividade', 'turmas'));
     }
 
     /**
@@ -151,7 +154,7 @@ class AtividadeController extends Controller
         $atividade->update($validated);
 
         // retorna a view
-        return redirect()->route('catequista.atividades');
+        return redirect()->route('catequista.atividades')->with('sucesso', "Atividade editada com sucesso.");
     }
 
     /**

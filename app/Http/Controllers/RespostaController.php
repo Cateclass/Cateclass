@@ -13,9 +13,15 @@ class RespostaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Atividade $atividade)
     {
-        //
+        // validação
+        if($atividade->turma->catequista_id !== auth()->id()){ abort(403); }
+
+        // busca as respostas ligadas a turma
+        $respostas = $atividade->respostas;
+
+    return view('catequista.verEntregas', compact('atividade', 'respostas'));
     }
 
     /**
@@ -69,8 +75,9 @@ class RespostaController extends Controller
      */
     public function edit(Resposta $resposta)
     {
+        $resposta->load('atividade');
         //mostra a resposta do aluno para ele corrigir/dar feedback
-        return view('formCorrecao', compact('resposta'));
+        return view('catequista.formCorrecao', compact('resposta'));
     }
 
     /**
@@ -96,7 +103,7 @@ class RespostaController extends Controller
         $resposta->update($validated);
 
         // retorna para a lista de respostas
-        return redirect()->route('respostas');
+        return redirect()->route('catequista.verEntregas', $resposta->atividade->id)->with('sucesso', 'Feedback enviado com sucesso!');
     }
 
     /**

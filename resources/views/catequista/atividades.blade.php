@@ -88,11 +88,11 @@
 
                         <div class="flex gap-2 flex-shrink-0">
 
-                            <a href="{{ url('/catequista/atividade/'.$atividade->id_atividade.'/editar') }}" class="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-md hover:bg-gray-200">
+                            <a href="{{ route('catequista.editarAtividade', $atividade->id) }}" class="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-md hover:bg-gray-200">
                                 editar
                             </a>
 
-                            <a href="{{ url('/catequista/atividade/'.$atividade->id_atividade.'/entregas') }}" class="text-sm font-medium text-blue-600 bg-blue-100 px-3 py-1 rounded-md hover:bg-blue-200">
+                            <a href="{{ route('catequista.verEntregas', $atividade->id) }}" class="text-sm font-medium text-blue-600 bg-blue-100 px-3 py-1 rounded-md hover:bg-blue-200">
                                 ver entregas
                             </a>
 
