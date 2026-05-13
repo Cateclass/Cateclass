@@ -1,0 +1,57 @@
+services:
+    # Servidor PHP com Laravel
+    app:
+        build: .
+        container_name: pi-laravel-app
+        volumes:
+            - .:/var/www/html:z
+        networks:
+            - pi-network
+
+    # Servidor Web (Nginx) para entregar o PHP
+    nginx:
+        image: nginx:alpine
+        container_name: pi-nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - .:/var/www/html:z
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf:z
+        networks:
+            - pi-network
+
+    # Banco de Dados MariaDB
+    db:
+        image: mariadb:latest
+        container_name: pi-mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: cateclass
+        ports:
+            - "3306:3306"
+        volumes:
+            - mariadb_data:/var/lib/mysql
+        networks:
+            - pi-network
+
+    # Banco de Dados MongoDB
+    mongodb:
+        image: mongo:7.0
+        container_name: pi-mongodb
+        command: ["mongod", "--wiredTigerCacheSizeGB", "1"]
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root
+        ports:
+            # Lado esquerdo (Fedora): 27018. Lado direito (Container): 27017
+            # Isso evita conflito com o seu mongo-fatec!
+            - "27018:27017"
+        networks:
+            - pi-network
+
+networks:
+    pi-network:
+        driver: bridge
+
+volumes:
+    mariadb_data:
