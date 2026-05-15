@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RespostaController;
 use App\Http\Controllers\TurmaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // rotas de inicio
@@ -42,6 +43,16 @@ Route::get('/atividades', [AtividadeController::class, 'index'])->middleware(['a
 Route::get('/atividade/{atividade}', [AtividadeController::class, 'show'])->middleware(['auth', 'verified'])->name('catequizando.verAtividade');
 Route::post('/atividade/responder', [RespostaController::class, 'store'])->middleware(['auth', 'verified'])->name('catequizando.responder');
 Route::delete('/atividade/cancelar', [RespostaController::class, 'destroy'])->middleware(['auth', 'verified'])->name('catequizando.cancelar');
+
+// rotas da coordenadora
+Route::get('/coordenadora/turmas', [TurmaController::class, 'index'])->middleware(['auth', 'verified'])->name('coordenadora.turmas');
+Route::get('/coordenadora/{tipo}', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('coordenadora.usuarios');
+Route::get('/coordenadora/turmas/{turma}/edit', [TurmaController::class, 'edit'])->middleware(['auth', 'verified'])->name('coordenadora.editarTurma');
+Route::put('/coordenadora/turmas/{turma}', [TurmaController::class, 'update'])->name('coordenadora.turmas.update');
+Route::delete('/coordenadora/deletarTurma/{turma}', [TurmaController::class, 'destroy'])->middleware(['auth', 'verified'])->name('coordenadora.deleteTurma');
+Route::get('/coordenadora/editarUsuario/{user}', [UserController::class, 'edit'])->middleware(['auth', 'verified'])->name('coordenadora.editarUsuario');
+Route::put('/coordenadora/usuarios/{user}', [UserController::class, 'update'])->name('coordenadora.usuarios.update');
+Route::delete('/coordenadora/deletarUsuario/{user}', [UserController::class, 'destroy'])->name('coordenadora.deletarUsuario');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

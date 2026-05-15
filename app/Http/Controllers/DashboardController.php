@@ -91,7 +91,7 @@ class DashboardController extends Controller
             $totalCatequizandos = User::where('tipo_usuario', 'catequizando')->count();
 
             // retorna a view com os dados
-            return view('dashboard.coordenador', compact(
+            return view('dashboard.coordenadora', compact(
                 'totalTurmas',
                 'totalCatequistas',
                 'totalCatequizandos'

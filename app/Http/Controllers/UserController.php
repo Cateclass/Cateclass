@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -11,13 +12,22 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() : View
+    public function index(string $tipo) : View
     {
         // retorna a lista de todos os usu[arios cadastrados
         $users = User::all();
 
-        // retorna a view da coordenadora com todos os usuários
-        return view('coordenacao.index', compact('users'));
+        // define para quem vai ser redirecionado
+
+        if ($tipo === 'catequistas') {
+            return view('coordenadora.catequistas', compact('users'));
+        }
+
+        if ($tipo === 'catequizandos') {
+            return view('coordenadora.catequizandos', compact('users'));
+        }
+        // caso alguém digite algo errado na url
+        abort(404);
     }
 
     /**
@@ -51,7 +61,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         // retorna a view com os dados do usuário já preenchidos
-        return view('coordenacao.edit', compact('user'));
+        return view('coordenadora.editarUsuario', compact('user'));
     }
 
     /**
@@ -95,8 +105,13 @@ class UserController extends Controller
         // atualiza o usuário
         $user->update($validated);
 
-        // retorna para o show com o aviso
-        return redirect()->route('coordenacao.show', ['user' => $user])->with('success', 'Usuário atualizado com sucesso!');
+        // retorna para a lista de catequistas
+        if ($user->tipo_usuario === 'catequista') {
+            return redirect()->route('coordenadora.usuarios',['tipo' => 'catequistas'] )->with('sucesso', 'Catequista atualizado com sucesso!');
+        }
+
+        // se não, retorna para a lista de catequizandos
+        return redirect()->route('coordenadora.usuarios', ['tipo' => 'catequizandos'])->with('sucesso', 'Catequizando atualizado com sucesso!');
     }
 
     /**
@@ -104,10 +119,17 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $tipo = $user->tipo_usuario;
+
         // deleta o usuário
         $user->delete();
 
-        // volta para o index com a mensagem de sucesso
-        return redirect()->route('coordenacao.index')->with('Usuário removido com sucesso!');
+        // retorna para a lista de catequistas
+        if ($user->tipo_usuario === 'catequista') {
+            return redirect()->route('coordenadora.usuarios',['tipo' => 'catequistas'] )->with('sucesso', 'Usuário removido com sucesso!');
+        }
+
+        // se não, retorna para a lista de catequizandos
+        return redirect()->route('coordenadora.usuarios', ['tipo' => 'catequizandos'])->with('sucesso', 'Usuário removido com sucesso!');
     }
 }

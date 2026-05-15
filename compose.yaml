@@ -49,6 +49,20 @@ services:
         networks:
             - pi-network
 
+
+    # Servidor Frontend (Vite/Tailwind) para Hot Reload
+    vite:
+        image: node:20
+        container_name: pi-vite
+        working_dir: /app
+        volumes:
+            - .:/app:z
+        # O comando --host é essencial para o Vite liberar a porta para fora do container
+        command: npm run dev -- --host
+        ports:
+            - "5173:5173"
+        networks:
+            - pi-network
 networks:
     pi-network:
         driver: bridge

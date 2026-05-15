@@ -23,7 +23,7 @@
     @elseif(auth()->user()->tipo_usuario === 'catequizando')
         @include('layouts.sidebars.catequizando')
     @elseif(auth()->user()->tipo_usuario === 'coordenador')
-        @include('layouts.sidebars.coordenador')
+        @include('layouts.sidebars.coordenadora')
     @endif
 @endif
 

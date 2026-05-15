@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Etapa;
 use App\Models\Turma;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,13 +43,13 @@ class TurmaController extends Controller
         }
 
         // coordenadora
-        if ($usuario->tipo_usuario === 'coordenadora')
+        if ($usuario->tipo_usuario === 'coordenador')
         {
             // pega todas as turmas do sistema
             $turmas = Turma::all();
 
             // retorna a view passando as turmas
-            return view('coordenador.turmas', compact('turmas'));
+            return view('coordenadora.turmas', compact('turmas'));
         }
 
         // não achou usuário
@@ -147,16 +148,31 @@ class TurmaController extends Controller
      */
     public function edit(Turma $turma)
     {
-        // permite apenas o catequista da turma
-        if ($turma->catequista_id !== auth()->id()) {
-            abort(403, 'Acesso não autorizado.');
-        }
-
-        // pegas as etapas
+        $usuario = auth()->user();
         $etapas = Etapa::all();
 
-        // retorna a view com a turma encontrada pelo parâmetro da rota
-        return view('catequista.editarTurma', compact('turma', 'etapas'));
+        // Coordenadora
+        if ($usuario->tipo_usuario === 'coordenador') {
+            // A coordenadora precisa ver todos os catequistas para poder trocar o responsável
+            $catequistas = User::where('tipo_usuario', 'catequista')->get();
+
+            // Retorna a view da coordenadora
+            return view('coordenadora.editarTurma', compact('turma', 'etapas', 'catequistas'));
+        }
+
+        // Catequista
+        if ($usuario->tipo_usuario === 'catequista') {
+            // Verifica se o catequista é o responsável pela turma
+            if ($turma->catequista_id !== $usuario->id) {
+                abort(403, 'Acesso não autorizado. Você só pode editar as suas próprias turmas.');
+            }
+
+            // Retorna a view do catequista
+            return view('catequista.editarTurma', compact('turma', 'etapas'));
+        }
+
+        // Se for catequizando ou um usuário inválido, barra o acesso.
+        abort(403, 'Acesso não autorizado.');
     }
 
     /**
@@ -164,56 +180,86 @@ class TurmaController extends Controller
      */
     public function update(Request $request, Turma $turma)
     {
-        // permite apenas o catequista da turma
-        if ($turma->catequista_id !== auth()->id()) {
-            abort(403, 'Acesso não autorizado.');
+        // identifica o usuario logado
+        $usuario = auth()->user();
+
+        // verifica se é catequista
+        if ($usuario->tipo_usuario === 'catequista') {
+
+            // permite apenas o catequista da turma
+            if ($turma->catequista_id !== $usuario->id) {
+                abort(403, 'Acesso não autorizado.');
+            }
+
+            // valida os dados
+            $validated = $request->validate(
+            // regras
+                [
+                    'tipo_turma' => 'required|string|max:20',
+                    'dia_horario' => 'required|string',
+                    'etapa_id' => 'required|integer|exists:etapas,id',
+                    'data_inicio' => 'required|date',
+                    'data_termino' => 'nullable|date|after_or_equal:data_inicio'
+                ],
+                // mensagens
+                [
+                    'tipo_turma.required' => 'O tipo da turma é obrigatório!',
+                    'tipo_turma.string' => 'O tipo da turma deve ser um texto!',
+                    'tipo_turma.max:20' => 'O tipo da turma deve tor no máximo 20 caracteres',
+
+                    'dia_horario.required' => 'O dia e horário é obrigatório!',
+                    'dia_horario.string' => 'O dia e horário deve ser um texto!',
+
+                    'etapa_id.required' => 'A etapa é obrigatória!',
+                    'etapa_id.integer' => 'A etapa deve ser um inteiro!',
+                    'etapa_id.exists' => 'A etapa deve ser válida!',
+
+                    'data_inicio.required' => 'É obrigatório definir a data de início!',
+                    'data_inicio.date' => 'A data de início deve ser do tipo data!',
+
+                    'data_termino.date' => 'A data de término deve ser do tipo data!',
+                    'data_termino.after_or_equal:data_inicio' => 'A data de término deve suceder a data de início!'
+                ]
+            );
+
+            // recalcula o nome da turma
+            $nome = $usuario->name;
+            $nomeCatequista = explode(' ', $nome)[0];
+            // gera o nome
+            $nomeGerado = "{$validated['tipo_turma']} - {$validated['dia_horario']} - $nomeCatequista";
+
+            // injeta os dados no array $validated
+            $validated['nome_turma'] = $nomeGerado;
+
+            // atualiza os dados
+            $turma->update($validated);
+
+            // retorna para o index de turmas
+            return redirect()->route('catequista.turmas')->with('sucesso', 'Turma atualizada com sucesso!');
         }
 
-        // valida os dados
-        $validated = $request->validate(
-        // regras
-            [
+        // verifica se é coordenadora
+        if ($usuario->tipo_usuario === 'coordenador' || $usuario->tipo_usuario === 'coordenadora') {
+
+            // valida os dados enviados pelo form da coordenadora
+            $validated = $request->validate([
+                'nome_turma' => 'required|string|max:255',
                 'tipo_turma' => 'required|string|max:20',
-                'dia_horario' => 'required|string',
                 'etapa_id' => 'required|integer|exists:etapas,id',
+                'catequista_id' => 'nullable|integer|exists:users,id',
                 'data_inicio' => 'required|date',
                 'data_termino' => 'nullable|date|after_or_equal:data_inicio'
-            ],
-            // mensagens
-            [
-                'tipo_turma.required' => 'O tipo da turma é obrigatório!',
-                'tipo_turma.string' => 'O tipo da turma deve ser um texto!',
-                'tipo_turma.max:20' => 'O tipo da turma deve tor no máximo 20 caracteres',
+            ]);
 
-                'dia_horario.required' => 'O dia e horário é obrigatório!',
-                'dia_horario.string' => 'O dia e horário deve ser um texto!',
+            // atualiza os dados
+            $turma->update($validated);
 
-                'etapa_id.required' => 'A etapa é obrigatória!',
-                'etapa_id.integer' => 'A etapa deve ser um inteiro!',
-                'etapa_id.exists' => 'A etapa deve ser válida!',
+            // retorna para o index de turmas da coordenadora
+            return redirect()->route('coordenadora.turmas')->with('sucesso', 'Turma atualizada com sucesso!');
+        }
 
-                'data_inicio.required' => 'É obrigatório definir a data de início!',
-                'data_inicio.date' => 'A data de início deve ser do tipo data!',
-
-                'data_termino.date' => 'A data de término deve ser do tipo data!',
-                'data_termino.after_or_equal:data_inicio' => 'A data de término deve suceder a data de início!'
-            ]
-        );
-
-        // recalcula o nome da turma
-        $nome = $request->user()->name;
-        $nomeCatequista = explode(' ', $nome)[0];
-        // gera o nome
-        $nomeGerado = "{$validated['tipo_turma']} - {$validated['dia_horario']} - $nomeCatequista";
-
-        // injeta os dados no array $validated
-        $validated['nome_turma'] = $nomeGerado;
-
-        // atualiza os dados
-        $turma->update($validated);
-
-        // retorna para o index de turmas
-        return redirect()->route('catequista.turmas')->with('sucesso', 'Turma atualizada com sucesso!');
+        // bloqueia acessos indevidos (ex: catequizando)
+        abort(403, 'Acesso não autorizado.');
     }
 
     /**
@@ -239,27 +285,33 @@ class TurmaController extends Controller
     // processa o código e coloca o catequizando na turma
     public function matricular(Request $request) : RedirectResponse
     {
-        // valida os dados
-        $request->validate([
+        // Valida a entrada do formulário
+        $validated = $request->validate([
             'codigo_turma' => 'required|string|exists:turmas,codigo_turma'
         ], [
             'codigo_turma.required' => 'Por favor, informe o código da turma.',
             'codigo_turma.exists' => 'Código inválido ou turma não encontrada.'
         ]);
 
-        // busca a turma usando o código validado
-        $turma = Turma::where('codigo_turma', $request->codigo_turma)->first();
+        // Busca a turma com base no código validado
+        $turma = Turma::where('codigo_turma', $validated['codigo_turma'])->first();
+
+        // Evita erro fatal caso a query retorne null
+        if (!$turma) {
+            return back()->with('erro', 'Turma não encontrada ou indisponível.');
+        }
+
         $user = auth()->user();
 
-        // verifica se o catequizando já não está na turma
-        if ($turma->alunos()->where('user_id', $user->id)->exists()) {
+        // Verifica se o usuário já possui vínculo com a turma
+        if ($turma->alunos()->where('users.id', $user->id)->exists()) {
             return back()->with('erro', 'Você já está matriculado nesta turma!');
         }
 
-        // insere o catequizando na turma
+        // Cria o relacionamento entre o aluno e a turma
         $turma->alunos()->attach($user->id);
 
-        // redireciona para a dashboard
+        // Redireciona com mensagem de sucesso
         return redirect()->route('dashboard')->with('sucesso', 'Matriculado com sucesso! Bem vindo(a) a turma!');
     }
 }

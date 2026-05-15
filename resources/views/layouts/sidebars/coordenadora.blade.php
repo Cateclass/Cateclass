@@ -4,7 +4,7 @@
                          transition-transform duration-300 ease-in-out shadow-lg lg:shadow-none">
 
     <div class="flex items-center gap-[10px] py-[15px] mb-[30px] border-b-1 border-black">
-        <img class="w-[100px] rounded-[50%]" src="{{ asset('assets/img/logotipo.jpg') }}" alt="Logotipo CateClass">
+        <img class="w-[100px] rounded-[50%]" src="{{ asset('img/logotipo.jpg') }}" alt="Logotipo CateClass">
 
         <div>
             <p>CateClass</p>
@@ -18,28 +18,28 @@
     <nav class="mb-[30px]">
         <ul class="list-none">
             <li>
-                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ url('/coordenador') }}">
+                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ route('dashboard') }}">
                     <i class="material-icons">home</i>
                     Dashboard
                 </a>
             </li>
 
             <li>
-                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ url('/coordenador/turmas') }}">
+                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ route('coordenadora.turmas') }}">
                     <i class="material-icons">people</i>
                     Turmas
                 </a>
             </li>
 
             <li>
-                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ url('/coordenador/catequistas') }}">
+                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ route('coordenadora.usuarios', ['tipo' => 'catequistas']) }}">
                     <i class="material-icons">content_paste</i>
                     Catequistas
                 </a>
             </li>
 
             <li>
-                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ url('/coordenador/catequizandos') }}">
+                <a class="flex items-center gap-[10px] p-[10px] pl-[25px] hover:bg-gray-100 mx-2 rounded-lg" href="{{ route('coordenadora.usuarios', ['tipo' => 'catequizandos']) }}">
                     <i class="material-icons">school</i>
                     Catequizandos
                 </a>
@@ -52,7 +52,7 @@
         <div class="pb-[15px] mb-[15px] mx-auto border-b border-black"></div>
 
         <div class="flex justify-center">
-            <a class="flex items-center gap-[10px] bg-[#BEDDF5] text-[#fff] w-[250px] py-[7px] pl-[10px] mt-[15px] rounded-[7px] text-center" href="{{ url('/coordenador/perfil') }}">
+            <a class="flex items-center gap-[10px] bg-[#BEDDF5] text-[#fff] w-[250px] py-[7px] pl-[10px] mt-[15px] rounded-[7px] text-center" href="{{ route('profile.edit') }}">
                 <div class="flex justify-center items-center w-[40px] h-[40px] rounded-[50%] bg-[#4A9FFF] font-bold text-white">
                     {{ strtoupper(substr(auth()->user()->nome ?? 'C', 0, 1)) }}
                 </div>
