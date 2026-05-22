@@ -19,6 +19,11 @@ Route::get('/sobre', function() {
 // rota da dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
+// rota do chat
+Route::get('/chat', function() {
+    return view('chat.index');
+})->middleware(['auth', 'verified'])->name('chat.index');
+
 // rotas do catequista
 Route::get('/turmas', [TurmaController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.turmas');
 Route::get('/catequista/atividades', [AtividadeController::class, 'index'])->middleware(['auth', 'verified'])->name('catequista.atividades');

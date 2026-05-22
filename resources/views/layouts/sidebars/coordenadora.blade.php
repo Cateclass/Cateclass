@@ -45,6 +45,13 @@
                 </a>
             </li>
 
+            <li>
+                <a class="flex items-center gap-3 p-3 pl-6 hover:bg-gray-100 rounded-lg mx-2" href="{{ route('chat.index') }}">
+                    <i class="material-icons">forum</i>
+                    Chat e Mensagens
+                </a>
+            </li>
+
         </ul>
     </nav>
 
