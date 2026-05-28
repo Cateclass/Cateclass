@@ -25,7 +25,7 @@
                             <i class="material-icons text-xl">groups</i>
                         </div>
                         <div class="overflow-hidden">
-                            <p class="font-semibold text-gray-900 truncate">{{ $turma->nome ?? 'Turma ' . $turma->id }}</p>
+                            <p class="font-semibold text-gray-900 truncate">{{ $turma->nome_turma ?? 'Turma ' . $turma->id }}</p>
                             <p class="text-xs text-gray-500 truncate">Chat do grupo</p>
                         </div>
                     </button>
@@ -104,9 +104,10 @@
                 </div>
 
                 <div class="p-4 border-t border-gray-200 bg-white">
-                    <form wire:submit.prevent="sendMessage" class="flex items-center gap-3">
+                    <form wire:submit.prevent="sendMessage" x-on:mensagem-enviada.window="$el.reset()" class="flex items-center gap-3">
                         <input
                             type="text"
+                            wire:key="chat-input-{{ $activeChatId }}"
                             wire:model="newMessage"
                             placeholder="Escreva sua mensagem..."
                             class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-[#4A9FFF] focus:border-[#4A9FFF] block w-full p-3 shadow-sm"

@@ -180,7 +180,7 @@
         </div>
 
         <div class="relative bottom-0 py-[20px] flex justify-center bg-[#505050]">
-            <p>2025 &copy; - Paróquia São Benedito</p>
+            <p>2026 &copy; - Paróquia São Benedito</p>
         </div>
 
     </footer>

@@ -133,10 +133,13 @@ class ChatComponent extends Component
         Message::create($data);
 
         // limpa o campo de texto
-        $this->newMessage = '';
+        $this->reset('newMessage');
 
         // recarrega as msg
         $this->loadMessages();
+
+        // avisa o navegador que deu certo
+        $this->dispatch('mensagem-enviada');
     }
 
     // fala qual arquivo representa esse componente

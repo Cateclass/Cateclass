@@ -5,7 +5,7 @@
     </button>
 
     <div class="mb-8">
-        <a href="{{ url('/catequista/turma/'.$atividade->turma_id) }}" class="flex items-center gap-1 text-sm text-blue-600 hover:underline mb-2 w-fit">
+        <a href="{{ url()->previous() }}" class="flex items-center gap-1 text-sm text-blue-600 hover:underline mb-2 w-fit">
             <i class="material-icons-outlined text-base">arrow_back</i>
             Voltar para a Turma
         </a>
